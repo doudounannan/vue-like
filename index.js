@@ -1,16 +1,14 @@
-function Vue (data, dom, key) {
-    this.data = data;
-    observe(data);
-    dom.innerHTML = data[key];
-
+function Vue (options) {
     var self = this;
+    this.vm = this;
+    this.data = options.data;
+
     Object.keys(this.data).forEach(function(property, index) {
         self.proxyProperty(property);
     });
 
-    var watcher = new Watcher(this, key, function (name) {
-        dom.innerHTML = name;
-    });
+    observe(this.data);
+    new Compile(options, this.vm);
 }
 
 Vue.prototype.proxyProperty = function(property){
