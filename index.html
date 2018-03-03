@@ -10,10 +10,7 @@
     <script src="./index.js"></script>
 </head>
 <body>
-    <div id="root">
-        <h2>{{title}}</h2>
-        <h1>{{name}}</h1>
-    </div>
+    <div id="root"><h2>{{title}}</h2><h1>{{name}}</h1><input type="text" v-model="title"></div>
     <script type="text/javascript">
         var vm = new Vue({
             el: "root",
