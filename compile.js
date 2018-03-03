@@ -25,14 +25,41 @@ Compile.prototype.compileElement = function (el) {
     [].slice.apply(childNodes).forEach((node) => {
         var reg = /\{\{(\w+)\}\}/;
         var text = node.textContent;
+        var self = this;
 
-        if (reg.test(text)) {
-            this.compileText(node, reg.exec(text)[1]);
+        if (node.nodeType === 1) {
+            var nodeAttrs = node.attributes;
+
+            Array.prototype.forEach.call(nodeAttrs, function(atttribute, index) {
+                var attrName = atttribute.name;
+
+                if (self.isDirective(attrName)) {
+                    var exp = atttribute.value;
+                    var dir = attrName.substr(2);
+
+                    if (self.isModelDirective(dir)) {
+                        self.compileModel(node, self.vm, exp);
+
+                        node.addEventListener('input', (e) => {
+                            self.vm[exp] = node.value;
+                        });
+                    }
+
+                    node.removeAttribute(attrName);
+                }
+            });
+
+            if (node.childNodes && node.childNodes.length > 0) {
+                this.compileElement(node);
+            }
         }
 
-        if (node.childNodes && node.childNodes.length > 0) {
-            this.compileElement(node);
+        if (node.nodeType === 3) {
+            if (reg.test(text)) {
+                this.compileText(node, reg.exec(text)[1]);
+            }
         }
+
     });
 }
 
@@ -53,4 +80,16 @@ Compile.prototype.updateText = function (node, text) {
 
 Compile.prototype.viewRefresh = function(){
     this.domEle.appendChild(this.fragment);
+};
+
+Compile.prototype.isDirective = function(attrName){
+    return /^v-\w+/.test(attrName);
+};
+
+Compile.prototype.isModelDirective = function(dir){
+    return dir === 'model';
+};
+
+Compile.prototype.compileModel = function(node, vm, exp){
+    node.value = vm[exp];
 };
