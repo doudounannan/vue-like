@@ -43,6 +43,9 @@ Compile.prototype.compileElement = function (el) {
                         node.addEventListener('input', (e) => {
                             self.vm[exp] = node.value;
                         });
+                    } else {
+                        // 指令事件
+                        node.addEventListener(dir.substr(3), self.vm.method[exp].bind(self.vm));
                     }
 
                     node.removeAttribute(attrName);

@@ -10,13 +10,25 @@
     <script src="./index.js"></script>
 </head>
 <body>
-    <div id="root"><h2>{{title}}</h2><h1>{{name}}</h1><input type="text" v-model="title"></div>
+    <div id="root">
+        <h2>{{title}}</h2>
+        <h1>{{name}}</h1>
+        <input type="text" v-model="title"><br>
+        <span>{{index}}</span>
+        <button type="button" v-on:click="reset">reset</button>
+    </div>
     <script type="text/javascript">
         var vm = new Vue({
             el: "root",
             data: {
                 name: 'mumu',
-                title: 'vue'
+                title: 'vue',
+                index: 5
+            },
+            method: {
+                reset: function () {
+                    this.index = 0;
+                }
             }
         });
 

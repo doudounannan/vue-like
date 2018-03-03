@@ -2,6 +2,7 @@ function Vue (options) {
     var self = this;
     this.vm = this;
     this.data = options.data;
+    this.method = options.method;
 
     Object.keys(this.data).forEach(function(property, index) {
         self.proxyProperty(property);
